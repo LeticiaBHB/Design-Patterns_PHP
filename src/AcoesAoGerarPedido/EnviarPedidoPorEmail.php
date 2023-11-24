@@ -4,9 +4,10 @@ namespace Aula\DesignPattern\AcoesAoGerarPedido;
 
 use Aula\DesignPattern\Pedido;
 
-class EnviarPedidoPorEmail implements AcoesAposGerarPedido
+class EnviarPedidoPorEmail implements \SplObserver
 {
-    public function executaAcao (Pedido $pedido): void{
+    public function update (\SplSubject $pedido): void{
+        echo $pedido->pedido->nomeCliente;
         echo "Enviando email de pedido gerado";
     }
 }

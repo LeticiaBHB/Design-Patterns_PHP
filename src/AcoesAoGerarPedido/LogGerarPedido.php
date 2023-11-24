@@ -4,9 +4,9 @@ namespace Aula\DesignPattern\AcoesAoGerarPedido;
 
 use Aula\DesignPattern\Pedido;
 
-class LogGerarPedido implements AcoesAposGerarPedido
+class LogGerarPedido implements \SplObserver
 {
-    public function executaAcao (Pedido $pedido): void{
+    public function update (\SplSubject $pedido): void{
         echo "Gerando Log de geração de pedido";
     }
 }

@@ -6,17 +6,21 @@ use Aula\DesignPattern\AcoesAoGerarPedido\AcoesAposGerarPedido;
 use Aula\DesignPattern\AcoesAoGerarPedido\CriarPedidoNoBanco;
 use Aula\DesignPattern\AcoesAoGerarPedido\EnviarPedidoPorEmail;
 use Aula\DesignPattern\AcoesAoGerarPedido\LogGerarPedido;
+use SplObserver;
 
-class GerarPedidoHandler
+class GerarPedidoHandler implements \SplSubject
 {
-    /**@var AcoesAoGerarPedido[]*/
+//   /**@var AcoesAoGerarPedido[]*/
+   /**@var SplObserver[]*/
+
     private array $acoesAposGerarPedido = [];
+    public Pedido $pedido;
     public function __construct(/*PedidoRepository, MailService*/){
     }
 
-    public function adicionarAcaoAoGerarPedido(AcoesAposGerarPedido $acao){
-        $this -> acoesAposGerarPedido[] = $acao;
-    }
+//    public function adicionarAcaoAoGerarPedido(AcoesAposGerarPedido $acao){
+//        $this -> acoesAposGerarPedido[] = $acao;
+//    }
     public function execute ( GerarPedido $gerarPedido){
             $orcamento = new Orcamento();
             $orcamento -> quantidadeItens = $gerarPedido -> getNumeroItens();
@@ -44,8 +48,28 @@ class GerarPedidoHandler
 //            $logGerarPedido -> executaAcao($pedido);
 //            $enviarPedidoPorEmail -> executaAcao($pedido);
 
-        foreach ($this -> acoesAposGerarPedido as $acao){
-            $acao->executaAcao ($pedido);
+//        foreach ($this -> acoesAposGerarPedido as $acao){
+//            $acao->executaAcao ($pedido);
+//        }
+        $this -> pedido = $pedido;
+        $this->notify();
+    }
+
+    public function attach(SplObserver $observer)
+    {
+        $this -> acoesAposGerarPedido[] = $observer;
+
+    }
+
+    public function detach(SplObserver $observer)
+    {
+        // TODO: Implement detach() method.
+    }
+
+    public function notify()
+    {
+        foreach ( $this->acoesAposGerarPedido as $acao){
+            $acao -> update($this);
         }
     }
 }
